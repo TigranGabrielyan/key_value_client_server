@@ -1,0 +1,14 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
+
+SET(CMAKE_C_COMPILER "gcc")
+SET(CMAKE_CXX_COMPILER "g++")
+
+PROJECT("key_value_manager")
+
+INCLUDE_DIRECTORIES(include)
+INCLUDE_DIRECTORIES(external/apr/include/apr-1)
+
+LINK_DIRECTORIES(external/apr/lib)
+
+ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(test/gtest)

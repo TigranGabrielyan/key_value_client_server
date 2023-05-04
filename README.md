@@ -4,6 +4,7 @@ Remote server application to manage "Key=Value" type of strings provided by clie
 
 # Server
 - Implemented in C
+- Works as daemon
 - Stores keys and values
 - Provides the following operation to the clients:
     - Insert, Delete, List, Search, Count
