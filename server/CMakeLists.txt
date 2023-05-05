@@ -1,0 +1,3 @@
+INCLUDE_DIRECTORIES(include)
+ADD_SUBDIRECTORY(request_handler_lib)
+ADD_SUBDIRECTORY(deamon)

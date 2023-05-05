@@ -23,10 +23,16 @@ Remote server application to manage "Key=Value" type of strings provided by clie
 
 # Further Improvements
 
- - TDB
+ - Improve transport to be able to receive replies chunk by chunk
+ - Extend to support IP6
+ - Support sending multiple Key/Value pairs in a single request
+ - Extend PUT request to be able to specify what to do if Key already exisits (fail/override/keep both)
+ - Add logging
+ - Improve error reporting/handling
+ - Improve input data error handling and client application robustness
 
 # Environment setup
-Following tools are required for successful build and execution of the JEL library.
+Following tools are required for successful build and execution of the project.
 
  - GCC and G++.
  - CMake (version 3.18 or higher)

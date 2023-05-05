@@ -1,0 +1,4 @@
+INCLUDE_DIRECTORIES(include)
+ADD_SUBDIRECTORY(client_transport_lib)
+ADD_SUBDIRECTORY(client_lib)
+ADD_SUBDIRECTORY(client_app)
