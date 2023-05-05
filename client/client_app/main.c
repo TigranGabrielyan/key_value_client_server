@@ -98,7 +98,7 @@ int main(int argc, char * argv[])
 
         printf("Enter request:\n");
 
-        const int read_symbols = scanf_s("%s", &input_line, sizeof(input_line));
+        const int read_symbols = scanf("%1023s", &input_line);
         if (sizeof(input_line) == read_symbols)
         {
             printf("Request too long. Maximum allowed length is 1024");

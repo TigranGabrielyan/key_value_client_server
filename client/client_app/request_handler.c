@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "request_handler.h"
 
 #include "apr_general.h"
@@ -92,7 +94,7 @@ static void init_apr_hashtable(void)
     if (APR_SUCCESS != status)
     {
         apr_terminate();
-        return NULL;
+        return;
     }
 
     ht = apr_hash_make(pool);
@@ -186,14 +188,14 @@ static int handle_put_request(kvm_client_handle_t h_client, const char * key, co
     value_blob.size = strlen(key);
     value_blob.data = key;
 
-    result = kvm_client_get(h_client, &key_blob, &value_blob);
+    result = kvm_client_put(h_client, &key_blob, &value_blob);
     if (KVM_RESULT_OK != result)
     {
         printf("kvm_client_get failed: error %d", result);
     }
     else
     {
-        printf("Key/Value pair successfully stored\n")
+        printf("Key/Value pair successfully stored\n");
     }
 
     return 1;
@@ -212,7 +214,7 @@ static int handle_get_request(kvm_client_handle_t h_client, const char * key, co
 
     key_blob.size = strlen(key);
     key_blob.data = key;
-    result = kvm_client_get(h_client, callback, NULL);
+    result = kvm_client_get(h_client, &key_blob,  callback, NULL);
     if (KVM_RESULT_OK != result)
     {
         printf("handle_get_request failed: error %d", result);

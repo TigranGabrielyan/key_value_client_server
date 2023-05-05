@@ -1,6 +1,6 @@
-cmake -S . -B ../../build -G "Unix Makefiles"
+cmake -S . -B ./build -G "Unix Makefiles"
 if [[ $? -eq 0 ]]
 then
-    cd ../../build
+    cd ./build
     make all
 fi

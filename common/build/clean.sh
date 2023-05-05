@@ -1,2 +1,2 @@
-rm -rf ../../build
-rm -rf ../../docs
+rm -rf ./build
+rm -rf ./docs

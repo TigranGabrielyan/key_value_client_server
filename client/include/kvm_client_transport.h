@@ -75,7 +75,7 @@ kvm_transport_send(
     uint32_t                request_size,
     const uint8_t *         request,
     uint32_t *              responce_size,
-    const uint8_t **        responce);
+    uint8_t **              responce);
 
 #ifdef __cplusplus
 }

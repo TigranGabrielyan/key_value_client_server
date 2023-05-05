@@ -30,7 +30,7 @@ kvm_transport_send(
     uint32_t                request_size,
     const uint8_t * const   request,
     uint32_t *              responce_size,
-    const uint8_t **        responce)
+    uint8_t **              responce)
 {
     return KVM_RESULT_OK;
 }
