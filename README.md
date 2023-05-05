@@ -45,9 +45,9 @@ Following external libraries are used:
 Used to work with hash tables and file IO. The library is precompiled and stored under `external` folder in the repository.
 
 # How To Build
- - To build the server, client as well as tests `./build.sh` command should be executed. 
- - To generate doxygen documentation `./doc_gen.sh` should be executed. Documentation will be generated in the `./docs` folder.
- - To clean all temporary generated file `./clean.sh` should be executed.
+ - To build the server, client as well as tests `./common/build/build.sh` command should be executed. 
+ - To generate doxygen documentation `./common/build/doc_gen.sh` should be executed. Documentation will be generated in the `./docs` folder.
+ - To clean all temporary generated file `./common/build/clean.sh` should be executed.
 
 # How To Run
 TBD
