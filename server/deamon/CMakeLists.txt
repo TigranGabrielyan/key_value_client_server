@@ -1,3 +1,0 @@
-ADD_EXECUTABLE(kvm_deamon deamon.c)
-
-TARGET_LINK_LIBRARIES(kvm_deamon kvm_request_handler)

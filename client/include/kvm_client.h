@@ -1,7 +1,7 @@
 /**
  * @file kvm_client.h
  *
- * @brief Defines the interfaces used by Key/Value Management system clients.
+ * @brief Defines the interfaces used by Key/Value Management System clients.
  *
  */
 
@@ -25,13 +25,13 @@ typedef struct kvm_const_dlob_data_s
 
 /**< Key/Value provider callback type */
 typedef void (* kvm_data_callback_t)(
-    void *                  context,
-    kvm_const_dlob_data_t * data);
+    void *                          context,
+    const kvm_const_dlob_data_t *   data);
 
 
 /*!
 *******************************************************************************
-** Opens the client to work with Key/Value management system.
+** Opens the client to work with Key/Value Management System.
 **
 ** @param[out]  h_client    Pinter where opened client handle will be stored.
 ** @param[in]   server_ip   Zero terminated IP address of the server.
@@ -44,7 +44,7 @@ kvm_result_t
 kvm_client_open(
     kvm_client_handle_t *   h_client,
     const char *            server_ip,
-    uint32_t                server_port);
+    uint16_t                server_port);
 
 /*!
 *******************************************************************************
@@ -61,7 +61,7 @@ kvm_client_close(
 
 /*!
 *******************************************************************************
-** Sends Key/Value pair to Key/Value management system to store.
+** Sends key/value pair to Key/Value Management System to store.
 ** If key already exists, function call will fail.
 **
 ** @param[in]   h_client    Client handle.
@@ -79,7 +79,7 @@ kvm_client_put(
 
 /*!
 *******************************************************************************
-** Gets Value by specified Key from Key/Value management system.
+** Gets value by specified key from Key/Value Management System.
 **
 ** @param[in]   h_client        Client handle.
 ** @param[in]   key             Blob containig key.
@@ -98,7 +98,7 @@ kvm_client_get(
 
 /*!
 *******************************************************************************
-** Delete Key/Value pair by specified key from Key/Value management system.
+** Delete key/value pair by specified key from Key/Value Management System.
 **
 ** @param[in]   h_client    Client handle.
 ** @param[in]   key         Blob containig key.
@@ -113,10 +113,10 @@ kvm_client_delete(
 
 /*!
 *******************************************************************************
-** Gets the list of all Key/Value pairs from Key/Value management system.
+** Gets the list of all keys from Key/Value Management System.
 **
 ** @param[in]   h_client        Client handle.
-** @param[in]   callback        Callback function to provide key/value pairs.
+** @param[in]   callback        Callback function to provide keys.
 **                              Call with data equal to NULL indicates
 **                              the end of the list.
 ** @param[in]   user_context    User context which will be provided during callback call.
@@ -125,14 +125,14 @@ kvm_client_delete(
 **      - KVM_RESULT_OK or corresponding KVM_RESULT_XXX in case of failure.
 */
 kvm_result_t
-kvm_client_list(
+kvm_client_list_keys(
     kvm_client_handle_t h_client,
     kvm_data_callback_t callback,
     void *              user_context);
 
 /*!
 *******************************************************************************
-** Gets the count of all Key/Value pairs from Key/Value management system.
+** Gets the count of all key/value pairs from Key/Value Management System.
 **
 ** @param[in]   h_client    Client handle.
 ** @param[out]  count       Pointer where the count will be stored.

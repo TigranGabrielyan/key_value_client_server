@@ -19,7 +19,8 @@ typedef uint8_t kvm_reply_status_t;
 
 /* Reply status codes */
 #define KVM_REPLY_STATUS_OK     ((kvm_reply_status_t) 0)
-
+#define KVM_REPLY_BAD_REQUEST   ((kvm_reply_status_t) 1)
+#define KVM_REPLY_SYS_FAIL      ((kvm_reply_status_t) 2)
 
 #pragma pack(push, 1)
 typedef struct kvm_reply_generic_s

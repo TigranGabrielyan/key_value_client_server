@@ -10,9 +10,9 @@ extern "C"
 #endif /* __cplusplus */
 
 int init_request_handler(void);
-int uninit_request_handler(void);
+void uninit_request_handler(void);
 
-int handle_request(kvm_client_handle_t h_client, char * input_line);
+int handle_request(const kvm_client_handle_t h_client, char * input_line);
 
 #ifdef __cplusplus
 }

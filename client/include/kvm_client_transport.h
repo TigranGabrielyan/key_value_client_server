@@ -18,11 +18,11 @@ extern "C"
 typedef struct kvm_transprot_s* kvm_transport_handle_t;
 
 
-/**< Responce callback type */
-typedef void (* kvm_responce_callback_t)(
+/**< Response callback type */
+typedef void (* kvm_response_callback_t)(
     void *          context,
-    uint32_t        responce_size,
-    const uint8_t * responce);
+    uint32_t        response_size,
+    const uint8_t * response);
 
 /*!
 *******************************************************************************
@@ -39,7 +39,7 @@ kvm_result_t
 kvm_transport_open(
     kvm_transport_handle_t *    h_transport,
     const char *                server_ip,
-    uint32_t                    server_port);
+    uint16_t                    server_port);
 
 /*!
 *******************************************************************************
@@ -62,8 +62,8 @@ kvm_transport_close(
 ** @param[in]   h_transport     Client handle.
 ** @param[in]   request_size    Size of the request buffer.
 ** @param[in]   request         Request buffer.
-** @param[out]  responce_size   Pointer where responce size will be stored.
-** @param[out]  responce        Pointer where responce will be stored. It is
+** @param[out]  response_size   Pointer where response size will be stored.
+** @param[out]  response        Pointer where response will be stored. It is
 **                              up to caller to free the memory.
 **
 ** @return
@@ -74,8 +74,8 @@ kvm_transport_send(
     kvm_transport_handle_t  h_transport,
     uint32_t                request_size,
     const uint8_t *         request,
-    uint32_t *              responce_size,
-    uint8_t **              responce);
+    uint32_t *              response_size,
+    uint8_t **              response);
 
 #ifdef __cplusplus
 }

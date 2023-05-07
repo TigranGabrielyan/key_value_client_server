@@ -4,6 +4,57 @@
 
 #include"request_handler.h"
 
+static int extract_ip_and_port(const char * input, char ** ip, uint32_t * port);
+static kvm_client_handle_t init_client(const char * command_line);
+static void print_welcome_message(void);
+
+int main(int argc, char * argv[])
+{
+    if (argc != 2)
+    {
+        printf("Please specify server IP and port in <IP>:<PORT> format\n");
+        return 1;
+    }
+
+    if (!init_request_handler())
+    {
+        return 1;
+    }
+
+    const kvm_client_handle_t h_client = init_client(argv[1]);
+    if (NULL == h_client)
+    {
+        uninit_request_handler();
+        return 1;
+    }
+
+    print_welcome_message();
+
+    while(1)
+    {
+        char input_line[1024];
+
+        printf("Enter request:\n");
+
+        char * str = fgets(input_line, 1024, stdin);
+        if (NULL == str)
+        {
+            printf("Request too long. Maximum allowed length is %llu\n", sizeof(input_line));
+            continue;
+        }
+
+        if (!handle_request(h_client, input_line))
+        {
+            break;
+        }
+    }
+
+    uninit_request_handler();
+    kvm_client_close(h_client);
+
+    return 0;
+}
+
 static int extract_ip_and_port(const char * input, char ** ip, uint32_t * port)
 {
     const char * delimiter = strchr(input, ':');
@@ -19,7 +70,7 @@ static int extract_ip_and_port(const char * input, char ** ip, uint32_t * port)
         printf("Memory allocation failed\n");
         return 0;
     }
-    memcpy(ip, input, ip_size);
+    memcpy(ptr, input, ip_size);
     ptr[ip_size] = '\0';
     *ip = ptr;
 
@@ -33,7 +84,7 @@ static int extract_ip_and_port(const char * input, char ** ip, uint32_t * port)
     return 1;
 }
 
-static kvm_client_handle_t init_client(char * command_line)
+static kvm_client_handle_t init_client(const char * command_line)
 {
     char * ip;
     uint32_t port;
@@ -45,9 +96,7 @@ static kvm_client_handle_t init_client(char * command_line)
     }
 
     kvm_client_handle_t h_client = NULL;
-    kvm_result_t result = KVM_RESULT_INVALID;
-
-    result = kvm_client_open(&h_client, ip, port);
+    const kvm_result_t result = kvm_client_open(&h_client, ip, port);
     if (KVM_RESULT_OK != result)
     {
         printf("kvm_client_open failed: error %d\n", result);
@@ -58,7 +107,7 @@ static kvm_client_handle_t init_client(char * command_line)
     return h_client;
 }
 
-static void print_welcome_message()
+static void print_welcome_message(void)
 {
     printf("Welcome to KVM Client. Below are the supported requests:\n");
     printf("put <key>=<value>   - store key/value pair in server\n");
@@ -67,52 +116,4 @@ static void print_welcome_message()
     printf("list-keys           - get all keys from the server\n");
     printf("count               - get count of key/value pairs stored on the server\n");
     printf("quit                - exit from application\n");
-}
-
-int main(int argc, char * argv[])
-{
-    if (argc != 2)
-    {
-        printf("Please specify server IP and port in <IP>:<PORT> format\n");
-        return 1;
-    }
-
-    if (!init_request_handler())
-    {
-        return 1;
-    }
-
-    kvm_client_handle_t h_client = NULL;
-    h_client = init_client(argv[1]);
-    if (NULL == h_client)
-    {
-        uninit_request_handler();
-        return 1;
-    }
-
-    print_welcome_message();
-
-    while(1)
-    {
-        char input_line[1024];
-
-        printf("Enter request:\n");
-
-        const int read_symbols = scanf("%1023s", &input_line);
-        if (sizeof(input_line) == read_symbols)
-        {
-            printf("Request too long. Maximum allowed length is 1024");
-            continue;
-        }
-
-        if (!handle_request(h_client, input_line))
-        {
-            break;
-        }
-    }
-
-    uninit_request_handler();
-    kvm_client_close(h_client);
-
-    return 0;
 }
