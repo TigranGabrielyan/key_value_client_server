@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "kvm_client_transport_internal.h": "c",
+        "kvm_client_transport.h": "c",
+        "functional": "cpp"
+    }
+}
