@@ -39,7 +39,7 @@ int main(int argc, char * argv[])
         char * str = fgets(input_line, 1024, stdin);
         if (NULL == str)
         {
-            printf("Request too long. Maximum allowed length is %llu\n", sizeof(input_line));
+            printf("Request too long. Maximum allowed length is %lu\n", sizeof(input_line));
             continue;
         }
 
