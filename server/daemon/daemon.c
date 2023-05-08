@@ -74,8 +74,6 @@ int main(int argc, char *argv[]) {
 
 void main()
 {
-    printf("Hello, Daemon\n");
-
     kvm_server_init(55555);
 
     int count = 10;

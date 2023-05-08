@@ -8,11 +8,6 @@
 #ifndef __kvm_client_transport_internal_h__
 #define __kvm_client_transport_internal_h__
 
-//#include <sys/socket.h>
-#include <winsock2.h>
-
-#include "kvm_results.h"
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -21,7 +16,7 @@ extern "C"
 /* Client context */
 struct kvm_transprot_s
 {
-    SOCKET client;
+    int client_socket;
 };
 
 #ifdef __cplusplus

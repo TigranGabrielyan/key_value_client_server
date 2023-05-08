@@ -153,6 +153,8 @@ static void callback(void * context, const kvm_const_dlob_data_t * data)
 {
     if (NULL == data)
     {
+        /* Indicates end of the data in a sequesnce. This information is ignored
+        in this sample. */
         return;
     }
     char * str = malloc(data->size + 1);

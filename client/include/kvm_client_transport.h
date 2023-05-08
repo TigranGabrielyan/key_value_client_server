@@ -28,9 +28,9 @@ typedef void (* kvm_response_callback_t)(
 *******************************************************************************
 ** Opens the client to work with Key/Value management system.
 **
-** @param[out]  h_transport Pinter where opened transport handle will be stored.
-** @param[in]   server_ip   Zero terminated IP address of the server.
-** @param[in]   server_port Server port.
+** @param[out]  h_transport     Pinter where opened transport handle will be stored.
+** @param[in]   server_ip       Zero terminated IP address of the server.
+** @param[in]   server_port     Server port.
 **
 ** @return
 **      - KVM_RESULT_OK or corresponding KVM_RESULT_XXX in case of failure.
@@ -56,14 +56,13 @@ kvm_transport_close(
 
 /*!
 *******************************************************************************
-** Closes the transport opened by kvm_transport_open().
-**
+** Sends the request and recieves the reply.
 **
 ** @param[in]   h_transport     Client handle.
 ** @param[in]   request_size    Size of the request buffer.
 ** @param[in]   request         Request buffer.
-** @param[out]  response_size   Pointer where response size will be stored.
-** @param[out]  response        Pointer where response will be stored. It is
+** @param[out]  reply_size      Pointer where reply size will be stored.
+** @param[out]  reply           Pointer where reply will be stored. It is
 **                              up to caller to free the memory.
 **
 ** @return
@@ -74,8 +73,8 @@ kvm_transport_send(
     kvm_transport_handle_t  h_transport,
     uint32_t                request_size,
     const uint8_t *         request,
-    uint32_t *              response_size,
-    uint8_t **              response);
+    uint32_t *              reply_size,
+    uint8_t **              reply);
 
 #ifdef __cplusplus
 }

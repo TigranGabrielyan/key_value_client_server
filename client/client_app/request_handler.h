@@ -1,7 +1,6 @@
 #ifndef __request_handler_h__
 #define __request_handler_h__
 
-#include <stdint.h>
 #include "kvm_client.h"
 
 #ifdef __cplusplus

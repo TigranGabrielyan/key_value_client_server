@@ -5,6 +5,10 @@
 *
 */
 
+#include<stdlib.h>
+
+#include <sys/socket.h>
+
 #include "kvm_requests.h"
 #include "kvm_replies.h"
 #include "kvm_utils.h"

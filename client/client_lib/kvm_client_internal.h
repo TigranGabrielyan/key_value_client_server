@@ -8,7 +8,6 @@
 #ifndef __kvm_client_internal_h__
 #define __kvm_client_internal_h__
 
-#include "kvm_results.h"
 #include "kvm_client_transport.h"
 
 #ifdef __cplusplus

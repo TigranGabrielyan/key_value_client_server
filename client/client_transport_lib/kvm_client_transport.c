@@ -5,14 +5,14 @@
 *
 */
 
-//#include <arpa/inet.h>
-//#include <unistd.h>
+#include<string.h>
+#include<unistd.h>
 
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
 #include "kvm_client_transport.h"
-
-
-
 #include "kvm_client_transport_internal.h"
 
 kvm_result_t
@@ -21,9 +21,6 @@ kvm_transport_open(
     const char *                server_ip,
     uint16_t                    server_port)
 {
-    WSADATA wsa;
-    WSAStartup(MAKEWORD(2,2),&wsa);
-
     if (NULL == h_transport || NULL == server_ip)
     {
         return KVM_RESULT_INVALID_PARAM;
@@ -41,14 +38,14 @@ kvm_transport_open(
     server_addr.sin_addr.s_addr = inet_addr(server_ip);
     server_addr.sin_port = htons(server_port);
 
-    transport->client = socket(AF_INET, SOCK_STREAM, 0);
-    if (-1 == transport->client)
+    transport->client_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (-1 == transport->client_socket)
     {
         kvm_transport_close(transport);
         return KVM_RESULT_SYS_CALL_FAIL;
     }
 
-    if (-1 == connect(transport->client, (struct sockaddr *)&server_addr, sizeof(server_addr)))
+    if (-1 == connect(transport->client_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)))
     {
         kvm_transport_close(transport);
         return KVM_RESULT_CONNECTION_FAIL;
@@ -63,14 +60,11 @@ kvm_result_t
 kvm_transport_close(
     kvm_transport_handle_t h_transport)
 {
-    WSACleanup();
-
     if (NULL != h_transport)
     {
-        if (-1 != h_transport->client)
+        if (-1 != h_transport->client_socket)
         {
-            //close(h_transport->client);
-            closesocket(h_transport->client);
+            close(h_transport->client_socket);
         }
 
         free(h_transport);
@@ -83,27 +77,26 @@ kvm_transport_send(
     kvm_transport_handle_t  h_transport,
     uint32_t                request_size,
     const uint8_t *         request,
-    uint32_t *              response_size,
-    uint8_t **              response)
+    uint32_t *              reply_size,
+    uint8_t **              reply)
 {
-    if (NULL == h_transport || NULL == request || NULL == response_size || NULL == response || 0 == request_size)
+    if (NULL == h_transport || NULL == request || NULL == reply_size || NULL == reply || 0 == request_size)
     {
         return KVM_RESULT_INVALID_PARAM;
     }
 
-    if (-1 == send(h_transport->client, (char *) &request_size, sizeof(request_size), 0))
+    if (-1 == send(h_transport->client_socket, (char *) &request_size, sizeof(request_size), 0))
     {
         return KVM_RESULT_SYS_CALL_FAIL;
     }
 
-    if (-1 == send(h_transport->client, request, request_size, 0))
+    if (-1 == send(h_transport->client_socket, request, request_size, 0))
     {
         return KVM_RESULT_SYS_CALL_FAIL;
     }
 
     uint32_t size;
-    uint32_t read_len = recv(h_transport->client, (char *) &size, sizeof(size), 0);
-    //read_len = read(h_transport->client, &size, sizeof(size));
+    uint32_t read_len = read(h_transport->client_socket, &size, sizeof(size));
     if (read_len == -1)
     {
         return KVM_RESULT_SYS_CALL_FAIL;
@@ -115,16 +108,15 @@ kvm_transport_send(
         return KVM_RESULT_SYS_CALL_FAIL;
     }
 
-    read_len = recv(h_transport->client, buff, size, 0);
-    //read_len = read(h_transport->client, buff, size, 0);
+    read_len = read(h_transport->client_socket, buff, size);
     if (read_len == -1)
     {
         free(buff);
         return KVM_RESULT_SYS_CALL_FAIL;
     }
 
-    *response_size = size;
-    *response = buff;
+    *reply_size = size;
+    *reply = buff;
 
     return KVM_RESULT_OK;
 }

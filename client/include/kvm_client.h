@@ -33,9 +33,9 @@ typedef void (* kvm_data_callback_t)(
 *******************************************************************************
 ** Opens the client to work with Key/Value Management System.
 **
-** @param[out]  h_client    Pinter where opened client handle will be stored.
-** @param[in]   server_ip   Zero terminated IP address of the server.
-** @param[in]   server_port Server port.
+** @param[out]  h_client        Pinter where opened client handle will be stored.
+** @param[in]   server_ip       Zero terminated IP address of the server.
+** @param[in]   server_port     Server port.
 **
 ** @return
 **      - KVM_RESULT_OK or corresponding KVM_RESULT_XXX in case of failure.
@@ -62,7 +62,7 @@ kvm_client_close(
 /*!
 *******************************************************************************
 ** Sends key/value pair to Key/Value Management System to store.
-** If key already exists, function call will fail.
+** If key already exists, it will be overriden.
 **
 ** @param[in]   h_client    Client handle.
 ** @param[in]   key         Blob containig key.
@@ -98,7 +98,7 @@ kvm_client_get(
 
 /*!
 *******************************************************************************
-** Delete key/value pair by specified key from Key/Value Management System.
+** Deletes key/value pair by specified key from Key/Value Management System.
 **
 ** @param[in]   h_client    Client handle.
 ** @param[in]   key         Blob containig key.

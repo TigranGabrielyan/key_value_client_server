@@ -9,9 +9,7 @@
 #ifndef __kvm_server_internal_h__
 #define __kvm_server_internal_h__
 
-#include <winsock2.h>
-//#include <sys/socket.h>
-
+#include <sys/select.h>
 #include "kvm_results.h"
 
 #ifdef __cplusplus
@@ -23,13 +21,13 @@ extern "C"
 
 typedef struct kvm_server_s
 {
-    SOCKET server;
+    int server_socket;
 
     fd_set readfds;
     int max_fd;
 
-    SOCKET clients[MAX_CLIENT_COUNT];
-    SOCKET active_clients[MAX_CLIENT_COUNT];
+    int client_sockets[MAX_CLIENT_COUNT];
+    int active_client_sockets[MAX_CLIENT_COUNT];
 } kvm_server_t;
 
 kvm_result_t init_apr_hashtable(void);
