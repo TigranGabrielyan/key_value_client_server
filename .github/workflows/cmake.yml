@@ -20,7 +20,9 @@ jobs:
       run: cmake -B ${{github.workspace}}/build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
-      run: cd ${{github.workspace}}/build & make all
+      run: |
+        cd ${{github.workspace}}/build
+        make all
 
     - name: Test
       working-directory: ${{github.workspace}}/build
