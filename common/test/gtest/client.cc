@@ -139,14 +139,14 @@ TEST_F(client_request, client_delete_null_key_return_bad_param)
 /********** kvm_client_list_keys **********/
 void list_callback(void * context, const kvm_const_dlob_data_t * data)
 {
-    if (NULL == data && *((uint8_t *) context) != 1)
+    if (NULL == data)
     {
-        *((uint8_t *) context) = 0;
+        return;
     }
 
-    if (data->size == value1_blob.size)
+    if (data->size == key1_blob.size)
     {
-        if (0 == memcmp(data->data, value1_blob.data, data->size))
+        if (0 == memcmp(data->data, key1_blob.data, data->size))
         {
             *((uint8_t *) context) = 1;
         }
