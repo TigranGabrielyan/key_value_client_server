@@ -1,29 +1,44 @@
-#if 0
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <signal.h>
 #include <syslog.h>
+#include <errno.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 
-void daemonize() {
-    pid_t pid, sid;
+#include "kvm_server.h"
 
+volatile sig_atomic_t stop_running = 0;
+
+static void daemonize(void)
+{
     // Fork parent process
-    pid = fork();
-    if (pid < 0) {
+    pid_t pid = fork();
+    if (pid < 0)
+    {
         exit(EXIT_FAILURE);
     }
-    if (pid > 0) {
+
+    // Exit from parent
+    if (pid > 0)
+    {
         exit(EXIT_SUCCESS);
     }
 
     // Detach from terminal
-    if (setsid() < 0) {
+    if (setsid() < 0)
+    {
         exit(EXIT_FAILURE);
     }
 
+    // Set file permissions
+    umask(0);
+
     // Change working directory to root
-    if (chdir("/") < 0) {
+    if (chdir("/") < 0)
+    {
         exit(EXIT_FAILURE);
     }
 
@@ -33,69 +48,74 @@ void daemonize() {
     close(STDERR_FILENO);
 }
 
-void signal_handler(int signal) {
-    switch (signal) {
+static void signal_handler(int signal)
+{
+    switch (signal)
+    {
+        case SIGHUP:
+        {
+            break;
+        }
         case SIGTERM:
-            syslog(LOG_INFO, "Received SIGTERM signal.");
-            exit(EXIT_SUCCESS);
+        {
+            syslog(LOG_INFO, "Key/Value Management System server interrupted by SIGTERM");
+            stop_running = 1;
             break;
+        }
         default:
+        {
             break;
+        }
     }
 }
-
-int main(int argc, char *argv[]) {
-    // Daemonize the process
-    daemonize();
-
-    // Open system log
-    openlog("mydaemon", LOG_PID, LOG_DAEMON);
-
-    // Set signal handlers
-    signal(SIGTERM, signal_handler);
-
-    // Main loop
-    while (1) {
-        // Do some work here...
-        syslog(LOG_INFO, "Daemon is running.");
-        sleep(10);
-    }
-
-    // Close system log
-    closelog();
-
-    return 0;
-}
-#endif
-
-#include <stdio.h>
-
-#include "kvm_server.h"
 
 void main()
 {
-    kvm_server_init(55555);
+    daemonize();
 
-    int count = 10;
-    while (0 != count)
+    openlog(NULL, LOG_PID, LOG_DAEMON);
+    syslog(LOG_INFO, "Key/Value Management System server started");
+
+    signal(SIGHUP, signal_handler);
+    signal(SIGTERM, signal_handler);
+
+    kvm_result_t result = kvm_server_init(55555);
+    if (KVM_RESULT_OK != result)
+    {
+        syslog(LOG_ERR, "kvm_server_init() failed: %s", strerror(errno));
+    }
+
+    while (!stop_running)
     {
         kvm_result_t result = kvm_server_wait_client_request();
         if (KVM_RESULT_OK != result)
         {
-            printf("kvm_server_wait_client_request failed: error %d", result);
-            break;
+            if (EINTR == errno)
+            {
+                /* Interrupted by signal. Simply restart waiting. */
+                continue;
+            }
+            syslog(LOG_ERR, "kvm_server_wait_client_request() failed: %s", strerror(errno));
+            exit(EXIT_FAILURE);
         }
 
         result = kvm_server_handle_request();
         if (KVM_RESULT_OK != result)
         {
-            printf("kvm_server_handle_request failed: error %d", result);
-            break;
+            syslog(LOG_ERR, "kvm_server_handle_request() failed: %s", strerror(errno));
+            exit(EXIT_FAILURE);
         }
-
-        --count;
     }
 
-    kvm_server_uninit();
+    result = kvm_server_uninit();
+    if (KVM_RESULT_OK != result)
+    {
+        syslog(LOG_ERR, "kvm_server_uninit() failed: %s", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    syslog(LOG_INFO, "Key/Value Management System server exited");
+    closelog();
+    exit(EXIT_SUCCESS);
 }
 

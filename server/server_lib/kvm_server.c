@@ -92,7 +92,6 @@ kvm_server_wait_client_request(
 
         if (-1 == select(FD_SETSIZE, &current_set, NULL, NULL, NULL))
         {
-            // TODO: handle signal termination
             return KVM_RESULT_SYS_CALL_FAIL;
         }
 
