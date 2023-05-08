@@ -69,17 +69,37 @@ static void signal_handler(int signal)
     }
 }
 
+static uint16_t get_port_from_config(void)
+{
+    const uint16_t default_port = 55555;
+    FILE * f = fopen("server.config", "r");
+    if (NULL == f)
+    {
+        return default_port;
+    }
+
+    uint16_t port = 0;
+    if (1 != fscanf(f, "%u", &port))
+    {
+        return default_port;
+    }
+
+    return port;
+}
+
 void main()
 {
+    uint16_t port = get_port_from_config();
+
     daemonize();
 
     openlog(NULL, LOG_PID, LOG_DAEMON);
-    syslog(LOG_INFO, "Key/Value Management System server started");
+    syslog(LOG_INFO, "Key/Value Management System server started on %u port", port);
 
     signal(SIGHUP, signal_handler);
     signal(SIGTERM, signal_handler);
 
-    kvm_result_t result = kvm_server_init(55555);
+    kvm_result_t result = kvm_server_init(port);
     if (KVM_RESULT_OK != result)
     {
         syslog(LOG_ERR, "kvm_server_init() failed: %s", strerror(errno));

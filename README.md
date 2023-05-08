@@ -5,6 +5,7 @@ Remote server application to manage "Key=Value" type of strings provided by clie
 # Server
 - Implemented in C
 - Works as daemon
+- Server port can be provided by `server.config` file (sample can be found uunder `server` folder). If config is not provided `55555` is used by default.
 - Stores keys and values
 - Provides the following operation to the clients:
     - Insert, Delete, List, Search, Count
