@@ -15,7 +15,7 @@ Remote server application to manage "Key=Value" type of strings provided by clie
 - Implemented in C
 - Accepts server configuration (IP and port) as a command line argument in "IP:Port" format
 - Provides the following operations:
-    - list - Get and print all Key/Value pairs from the server
+    - list-keys - Get and print all Keys from the server
     - put Key=Value - Send Key/Value pair to server to store
     - get Key - Get value for specified Key
     - del Key - Delete Key/Value pair with specified Key form the server
