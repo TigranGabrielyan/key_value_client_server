@@ -81,9 +81,11 @@ static uint16_t get_port_from_config(void)
     uint16_t port = 0;
     if (1 != fscanf(f, "%u", &port))
     {
+        fclose(f);
         return default_port;
     }
 
+    fclose(f);
     return port;
 }
 
